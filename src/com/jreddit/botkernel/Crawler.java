@@ -152,7 +152,7 @@ public class Crawler implements Runnable {
      */
     public void run() {
 
-        log("Crawler running...");
+        log("Crawler " + _name + " running...");
 
         while(true) {
 
@@ -393,7 +393,7 @@ public class Crawler implements Runnable {
         }
     }
 
-    private void log(String s) {
+    protected static void log(String s) {
         BotKernel.getBotKernel().log(s);
     }
 

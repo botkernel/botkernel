@@ -60,6 +60,18 @@ public class BotKernel implements Runnable {
 
             log("Crawler to add: " + crawler);
 
+            for(Crawler c: _crawlers) {
+                if(c.getName().equals(crawler.getName())) {
+                    //
+                    // Don't allow multiple crawlers with the same unique 
+                    // name.
+                    //
+                    log("Crawler " + crawler.getName() + 
+                        " already added to botkernel crawlers. Skipping.");
+                    return;
+                }
+            }
+
             //
             // Add the crawler to our list of crawlers
             //
