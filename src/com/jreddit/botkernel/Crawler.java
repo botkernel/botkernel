@@ -128,6 +128,22 @@ public class Crawler implements Runnable {
 
     /**
      *
+     * Checks of the specified subreddit is in this crawler's
+     * searched subreddits.
+     */
+    public boolean containsSubreddit(String s) {
+        synchronized(_lock) {
+            for(String sub: _subs) {
+                if(sub.equals(s)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
      *  Remove a match criteria from this crawler.
      *
      */
