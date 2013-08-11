@@ -354,7 +354,7 @@ public class Crawler implements Runnable {
             List<Comment> comments = Comments.getComments(
                                                         _user,
                                                         submission );
-            // log("Comments: " + comments.size());
+            log("Comments: " + comments.size());
 
             recursiveCommentCheck(comments);
 
