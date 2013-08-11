@@ -337,8 +337,10 @@ public class Crawler implements Runnable {
                 CrawlerListener listener = criteria.getCrawlerListener();
                 if( copyListeners.contains(listener) &&
                     criteria.match(submission)  ) {
-   
-                    log("Found match in submission " + submission.getName());
+ 
+                    //
+                    //
+                    // log("Found match in submission " + submission.getName());
 
                     listener.handleCrawlerEvent(submission);
                 }
@@ -397,8 +399,10 @@ public class Crawler implements Runnable {
                 CrawlerListener listener = criteria.getCrawlerListener();
                 if( copyListeners.contains(listener) &&
                     criteria.match(comment)  ) {
-    
-                    log("Found match in comment " + comment.getName());
+   
+                    //
+                    //
+                    // log("Found match in comment " + comment.getName());
 
                     listener.handleCrawlerEvent(comment);
                 }
