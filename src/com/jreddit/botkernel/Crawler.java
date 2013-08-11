@@ -301,7 +301,7 @@ public class Crawler implements Runnable {
                                                 (String)null,
                                                 (String)null );
 
-        log("Submissions: " + submissions.size());
+        // log("Submissions: " + submissions.size());
 
         for(Submission submission: submissions) {
 
@@ -354,7 +354,7 @@ public class Crawler implements Runnable {
             List<Comment> comments = Comments.getComments(
                                                         _user,
                                                         submission );
-            log("Comments: " + comments.size());
+            // log("Comments: " + comments.size());
 
             recursiveCommentCheck(comments);
 
