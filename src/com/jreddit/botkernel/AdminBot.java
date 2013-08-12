@@ -87,6 +87,12 @@ public class AdminBot extends BaseBot implements Bot {
         _replies = new Properties();
         loadProperties(REPLIES_FILE, _replies);
 
+        //
+        // Register the default crawler, which any bots can use.
+        //
+        Crawler crawler = DefaultCrawler.getCrawler();
+        crawler.setShuffle(true);
+        BotKernel.getBotKernel().addCrawler(crawler); 
     }
 
 
@@ -155,6 +161,21 @@ public class AdminBot extends BaseBot implements Bot {
                             if(_replies.getProperty(fullname) != null) {
                                 log("Skipping already replied message: " 
                                     + body);
+                                Messages.markAsRead(_user, message);
+                                continue;
+                            }
+
+                            if(body.indexOf("add default crawler") != -1) {
+                                Crawler crawler = DefaultCrawler.getCrawler();
+                                BotKernel.getBotKernel().addCrawler(crawler); 
+                                Messages.markAsRead(_user, message);
+                                continue;
+                            }
+
+                            if(body.indexOf("remove default crawler") != -1) {
+                                Crawler crawler = DefaultCrawler.getCrawler();
+                                BotKernel.getBotKernel().removeCrawler(
+                                                                    crawler); 
                                 Messages.markAsRead(_user, message);
                                 continue;
                             }

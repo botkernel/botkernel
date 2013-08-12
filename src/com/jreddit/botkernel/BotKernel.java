@@ -295,7 +295,9 @@ public class BotKernel implements Runnable {
             in.close();
             
             Set<String> keys = props.stringPropertyNames();
-            for(String key: keys) {
+            List<String> sortedKeys = new ArrayList<String>(keys);
+            Collections.sort(sortedKeys);
+            for(String key: sortedKeys) {
 
                 // log("Inspecting key " + key);
 

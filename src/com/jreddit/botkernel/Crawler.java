@@ -24,6 +24,12 @@ public class Crawler implements Runnable {
                                     new ArrayList<CrawlerMatchCriteria>();
 
     //
+    // Cache Submission comment count as an optimization when crawling.
+    //
+    protected Map<String, Long> _submissionCommentCount = 
+                                        new HashMap<String, Long>();
+
+    //
     // An object used when synchronizing modification to the listeners
     //
     private Object _lock = new Object();
@@ -203,6 +209,17 @@ public class Crawler implements Runnable {
             //
             Date startTime = new Date();
 
+            //
+            // Optimization.
+            // 
+            // Do not crawl if there are no listeners.
+            //
+            if(_listeners.size() == 0) {
+                log("No listeners. Crawler sleeping...");
+                sleep(_sleepTime);
+                continue;
+            }
+
             // 
             // Find any new matches
             //
@@ -305,8 +322,35 @@ public class Crawler implements Runnable {
 
         for(Submission submission: submissions) {
 
-            log("Checking for crawl matches in submission: " + 
-                                               submission.getTitle() );
+            // log("Checking for crawl matches in submission: " + 
+            //    submission.getTitle() +
+            //    " (" + submission.getName() + ")" +
+            //    " (" + submission.getSubreddit() + ")" );
+
+            //
+            // Optimization
+            //
+            // Cache the number of comments in the submission and only
+            // check the submission if the number has changed since it
+            // was cached.
+            //
+            Long numComments = 
+                        _submissionCommentCount.get(submission.getName());
+            if(numComments == null) {
+                long l = submission.getNumComments();
+                numComments = new Long(l);
+                _submissionCommentCount.put(submission.getName(), numComments);
+            } else {
+                //
+                // See if we need to skip this.
+                //
+                if(numComments.longValue() == submission.getNumComments()) {
+                    // No new comments. Skip this.
+                    // log("No new comments. Skipping " + submission.getName());
+                    continue;
+                }
+                _submissionCommentCount.put(submission.getName(), numComments);
+            }
 
             //
             // Check the submission itself to see if we have a match
