@@ -356,12 +356,8 @@ public class Crawler implements Runnable {
 
             log("Checking for crawl matches in submission: " + 
                 submission.getTitle() +
-                " (" +  submission.getName() + " in " +
-                        submission.getSubreddit() + ")" +
-                " (cached count " + 
-                    _submissionCommentCount.get(submission.getName()) + 
-                    " actual " + submission.getNumComments() + ")"); 
-
+                " (" + submission.getName() + " in " +
+                "/r/" + submission.getSubreddit() + ")");
 
             //
             // Check the submission itself to see if we have a match
