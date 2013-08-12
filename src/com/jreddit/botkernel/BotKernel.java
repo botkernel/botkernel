@@ -141,6 +141,18 @@ public class BotKernel implements Runnable {
         }
 
         //
+        //  Stop crawlers
+        //
+        for(Crawler crawler: _crawlers) {
+            log("Shutting down crawler " + crawler.getName());
+            crawler.shutdown();
+        }
+        for(Crawler crawler: _crawlers) {
+            stopThread(crawler);
+        }
+
+
+        //
         // stopThread() will wait for threads to join().
         // Any threads still running are not releasing resources
         // nicely. 

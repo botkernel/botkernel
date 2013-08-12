@@ -349,8 +349,19 @@ public class Crawler implements Runnable {
                     // log("No new comments. Skipping " + submission.getName());
                     continue;
                 }
-                _submissionCommentCount.put(submission.getName(), numComments);
+                _submissionCommentCount.put(
+                                    submission.getName(), 
+                                    new Long(submission.getNumComments()) );
             }
+
+            log("Checking for crawl matches in submission: " + 
+                submission.getTitle() +
+                " (" +  submission.getName() + " in " +
+                        submission.getSubreddit() + ")" +
+                " (cached count " + 
+                    _submissionCommentCount.get(submission.getName()) + 
+                    " actual " + submission.getNumComments() + ")"); 
+
 
             //
             // Check the submission itself to see if we have a match
