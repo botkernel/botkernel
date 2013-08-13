@@ -220,6 +220,16 @@ public class Crawler implements Runnable {
                 continue;
             }
 
+            List<CrawlerListener> copyListeners = 
+                                    new ArrayList<CrawlerListener>();
+            List<CrawlerMatchCriteria> copyCriteria = 
+                                    new ArrayList<CrawlerMatchCriteria>();
+            copyListeners(copyListeners, copyCriteria);
+            for(CrawlerListener listener: copyListeners) {
+                listener.handleCrawlerEvent(
+                    new CrawlerEvent(CrawlerEvent.CRAWLER_START) );
+            }
+
             // 
             // Find any new matches
             //
@@ -265,6 +275,15 @@ public class Crawler implements Runnable {
                     }
                 }
             }
+
+            copyListeners = new ArrayList<CrawlerListener>();
+            copyCriteria = new ArrayList<CrawlerMatchCriteria>();
+            copyListeners(copyListeners, copyCriteria);
+            for(CrawlerListener listener: copyListeners) {
+                listener.handleCrawlerEvent(
+                    new CrawlerEvent(CrawlerEvent.CRAWLER_COMPLETE) );
+            }
+
 
             //
             // Crawler default sleep
@@ -367,20 +386,7 @@ public class Crawler implements Runnable {
                                     new ArrayList<CrawlerListener>();
             List<CrawlerMatchCriteria> copyCriteria = 
                                     new ArrayList<CrawlerMatchCriteria>();
-            synchronized(_lock) {
-                // Copy our lists of listeners and criteria so we
-                // don't get concurrent modification exceptions
-                // if listeners want to remove themselves 
-                // or their criteria as their response to a match
- 
-                for(CrawlerListener listener: _listeners) {
-                    copyListeners.add(listener);
-                }
-
-                for(CrawlerMatchCriteria criteria: _criteria) {
-                    copyCriteria.add(criteria);
-                }
-            }    
+            copyListeners(copyListeners, copyCriteria);
 
             //
             // Now do the matches against the copies. Listeners can
@@ -395,7 +401,10 @@ public class Crawler implements Runnable {
                     //
                     // log("Found match in submission " + submission.getName());
 
-                    listener.handleCrawlerEvent(submission);
+                    listener.handleCrawlerEvent(
+                                new CrawlerEvent(   CrawlerEvent.CRAWLER_MATCH, 
+                                                    submission, 
+                                                    criteria )      );
                 }
             }
 
@@ -433,19 +442,7 @@ public class Crawler implements Runnable {
                                     new ArrayList<CrawlerListener>();
             List<CrawlerMatchCriteria> copyCriteria = 
                                     new ArrayList<CrawlerMatchCriteria>();
-            synchronized(_lock) {
-                //
-                // Copy our lists of listeners and criteria.
-                // Operate on the copies.
-                //
- 
-                for(CrawlerListener listener: _listeners) {
-                    copyListeners.add(listener);
-                }
-                for(CrawlerMatchCriteria criteria: _criteria) {
-                    copyCriteria.add(criteria);
-                }
-            }    
+            copyListeners(copyListeners, copyCriteria);
 
             //
             // Run matchers against the comment
@@ -459,13 +456,45 @@ public class Crawler implements Runnable {
                     //
                     // log("Found match in comment " + comment.getName());
 
-                    listener.handleCrawlerEvent(comment);
+                    listener.handleCrawlerEvent(
+                                new CrawlerEvent(   CrawlerEvent.CRAWLER_MATCH,
+                                                    comment,
+                                                    criteria )      );
+
                 }
             }
 
             List<Comment> replies = comment.getReplies();
             recursiveCommentCheck(replies);
         }
+    }
+
+    /**
+     *
+     * Create copies of listeners and criteria within a sync'ed block.
+     *
+     *      Copy our lists of listeners and criteria so we
+     *      don't get concurrent modification exceptions
+     *      if listeners want to remove themselves 
+     *      or their criteria as part of their response to an event;
+     *
+     */
+    private void copyListeners( List<CrawlerListener> copyListeners,
+                                List<CrawlerMatchCriteria> copyCriteria ) {
+        synchronized(_lock) {
+            // Copy our lists of listeners and criteria so we
+            // don't get concurrent modification exceptions
+            // if listeners want to remove themselves 
+            // or their criteria as their response to a match
+ 
+            for(CrawlerListener listener: _listeners) {
+                copyListeners.add(listener);
+            }
+
+            for(CrawlerMatchCriteria criteria: _criteria) {
+                copyCriteria.add(criteria);
+            }
+        }    
     }
 
     protected static void log(String s) {

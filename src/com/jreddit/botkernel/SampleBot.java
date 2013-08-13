@@ -238,8 +238,15 @@ public class SampleBot extends BaseBot implements Bot, CrawlerListener {
      * Handle a crawler hit.
      *
      */
-    public void handleCrawlerEvent(Thing thing) {
-      
+    public void handleCrawlerEvent(CrawlerEvent event) {
+        
+        if(event.getType() != CrawlerEvent.CRAWLER_MATCH) {
+            // Only handle match events
+            return;
+        }
+
+        Thing thing = event.getSource();
+
         //
         // Make sure we haven't already replied to this.
         //

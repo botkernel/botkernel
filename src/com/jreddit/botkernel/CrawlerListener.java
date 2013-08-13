@@ -15,14 +15,15 @@ public interface CrawlerListener  {
 
     /**
      *
-     * Called then a crawler has matched some crawl criteria.
+     * Called when a crawler has matched some crawl criteria.
      *
-     * @param thing     The com.omrlnr.jreddit.Thing which matched
-     *                  the crawl criteria.
-     *                  This will be either a
-     *                  com.omrlnr.jreddit.Comment or a 
-     *                  com.omrlnr.jreddit.Submission (with selftext)
+     * @param event     The crawler event. This will contain data
+     *                  about the type of the event (match, finished, etc.)
+     *                  and additional context such as 
+     *                  the Thing (comment/submission) which matched or the
+     *                  crawler criteria which matched it.
+     *
      */
-    public void handleCrawlerEvent(Thing comment);
+    public void handleCrawlerEvent(CrawlerEvent event);
 
 }
