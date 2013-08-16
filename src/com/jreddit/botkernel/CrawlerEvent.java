@@ -19,13 +19,18 @@ public class CrawlerEvent {
     private int _type;
     private Thing _thing;
     private CrawlerMatchCriteria _criteria;
+    private Crawler _crawler;
 
-    public CrawlerEvent(int type) {
+    public CrawlerEvent(int type, Crawler crawler) {
         _type = type;
+        _crawler = crawler;
     }
 
-    public CrawlerEvent(int type, Thing thing, CrawlerMatchCriteria criteria) {
-        this(type);
+    public CrawlerEvent(int type, 
+                        Thing thing, 
+                        CrawlerMatchCriteria criteria,
+                        Crawler crawler) {
+        this(type, crawler);
         _thing = thing;
         _criteria = criteria;
     }
@@ -33,5 +38,6 @@ public class CrawlerEvent {
     public int getType() { return _type; }
     public Thing getSource() { return _thing; }
     public CrawlerMatchCriteria getCriteria() { return _criteria; }
+    public Crawler getCrawler() { return _crawler; }
 
 }

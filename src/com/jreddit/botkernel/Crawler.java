@@ -227,7 +227,7 @@ public class Crawler implements Runnable {
             copyListeners(copyListeners, copyCriteria);
             for(CrawlerListener listener: copyListeners) {
                 listener.handleCrawlerEvent(
-                    new CrawlerEvent(CrawlerEvent.CRAWLER_START) );
+                    new CrawlerEvent(CrawlerEvent.CRAWLER_START, this) );
             }
 
             // 
@@ -281,7 +281,7 @@ public class Crawler implements Runnable {
             copyListeners(copyListeners, copyCriteria);
             for(CrawlerListener listener: copyListeners) {
                 listener.handleCrawlerEvent(
-                    new CrawlerEvent(CrawlerEvent.CRAWLER_COMPLETE) );
+                    new CrawlerEvent(CrawlerEvent.CRAWLER_COMPLETE, this) );
             }
 
 
@@ -404,7 +404,8 @@ public class Crawler implements Runnable {
                     listener.handleCrawlerEvent(
                                 new CrawlerEvent(   CrawlerEvent.CRAWLER_MATCH, 
                                                     submission, 
-                                                    criteria )      );
+                                                    criteria,
+                                                    this )      );
                 }
             }
 
@@ -459,7 +460,8 @@ public class Crawler implements Runnable {
                     listener.handleCrawlerEvent(
                                 new CrawlerEvent(   CrawlerEvent.CRAWLER_MATCH,
                                                     comment,
-                                                    criteria )      );
+                                                    criteria,
+                                                    this )      );
 
                 }
             }
