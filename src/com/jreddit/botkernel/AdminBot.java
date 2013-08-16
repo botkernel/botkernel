@@ -29,6 +29,8 @@ public class AdminBot extends BaseBot implements Bot {
     public static final String SHUTDOWN = "shutdown";   // Shutdown botkernel
     public static final String LOAD_BOT = "loadbot";    // Load a bot
     public static final String STOP_BOT = "stopbot";    // Stop a bot
+    public static final String ADD_CRAWLER      = "addcrawler";
+    public static final String REMOVE_CRAWLER   = "removecrawler";  
 
     //
     // Time to sleep in seconds
@@ -90,9 +92,10 @@ public class AdminBot extends BaseBot implements Bot {
         //
         // Register the default crawler, which any bots can use.
         //
-        Crawler crawler = DefaultCrawler.getCrawler();
+        Crawler crawler = CrawlerFactory.getCrawler(CrawlerFactory.DEFAULT_CRAWLER);
         crawler.setShuffle(true);
         BotKernel.getBotKernel().addCrawler(crawler); 
+
     }
 
 
@@ -165,20 +168,7 @@ public class AdminBot extends BaseBot implements Bot {
                                 continue;
                             }
 
-                            if(body.indexOf("add default crawler") != -1) {
-                                Crawler crawler = DefaultCrawler.getCrawler();
-                                BotKernel.getBotKernel().addCrawler(crawler); 
-                                Messages.markAsRead(_user, message);
-                                continue;
-                            }
-
-                            if(body.indexOf("remove default crawler") != -1) {
-                                Crawler crawler = DefaultCrawler.getCrawler();
-                                BotKernel.getBotKernel().removeCrawler(
-                                                                    crawler); 
-                                Messages.markAsRead(_user, message);
-                                continue;
-                            }
+                           
 
                             String[] commands = body.split(" ");
 
@@ -194,7 +184,25 @@ public class AdminBot extends BaseBot implements Bot {
                             }
 
                             if(commands.length == 2) {
-    
+     
+                                if(commands[0].equals(ADD_CRAWLER)) {
+                                    Crawler crawler = 
+                                        CrawlerFactory.getCrawler(commands[1]);
+                                    BotKernel.getBotKernel().addCrawler(
+                                                                    crawler); 
+                                    Messages.markAsRead(_user, message);
+                                    continue;
+                                }
+
+                                if(commands[0].equals(REMOVE_CRAWLER)) {
+                                    Crawler crawler = 
+                                        CrawlerFactory.getCrawler(commands[1]);
+                                    BotKernel.getBotKernel().removeCrawler(
+                                                                    crawler); 
+                                    Messages.markAsRead(_user, message);
+                                    continue;
+                                }
+
                                 if(commands[0].equals(LOAD_BOT)) {
                                     String classname = commands[1];
 
