@@ -294,9 +294,20 @@ public class Crawler implements Runnable {
         }
     }
 
+    public void wake() {
+        _wake = true;
+    }
+
+    private boolean _wake = false;
+
     protected void sleep(int seconds) {
         try {
             for(int i = 0; i <  seconds; i++) {
+                if(_wake) {
+                    // Wake up
+                    _wake = false;
+                    return;
+                }
                 if(_shutdown) {
                     return;
                 }
